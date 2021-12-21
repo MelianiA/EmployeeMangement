@@ -25,6 +25,7 @@ namespace EmployeeMangement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddSingleton<ICompanyRepository<Employee>, EmployeeRepository>();
         }
@@ -42,10 +43,12 @@ namespace EmployeeMangement
             }
 
             app.UseFileServer();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default",
+                    "{controller=Employee}/{action=Index}/{id?}");
+            });
             app.UseRouting();
-            app.UseMvcWithDefaultRoute();
-
-
 
 
             app.UseEndpoints(endpoints =>

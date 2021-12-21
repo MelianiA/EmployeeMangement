@@ -12,12 +12,12 @@ namespace EmployeeMangement.Models.Repositories
         public EmployeeRepository()
         {
             Employees = new List<Employee>();
-            Employees.Add(new Employee { Name="Abdou"});
+            Employees.Add(new Employee { Id = 0, Name="Abdou", Departement="M'sila", Email="abd@meliani.eu"});
+            Employees.Add(new Employee { Id = 1, Name="ab", Departement="Lyon", Email="abd@Lyon.eu"});
         }
 
-        public Employee Get(int id)
-        {
-            return Employees[id];
-        }
+        public Employee Get(int id) => Employees[id];
+
+        public List<Employee> GetAll() => Employees;
     }
 }

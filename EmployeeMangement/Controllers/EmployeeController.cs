@@ -17,8 +17,11 @@ namespace EmployeeMangement.Controllers
         }
         public ViewResult Index()
         {
-            ViewData["ab"] = "Abderrahmen";
-            return View();
+            return View(_companyRepository.GetAll());
+        }
+        public ViewResult Details(int id)
+        {
+            return View(_companyRepository.Get(id));
         }
     }
 }
