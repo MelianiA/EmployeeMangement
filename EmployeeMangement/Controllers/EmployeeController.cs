@@ -35,7 +35,7 @@ namespace EmployeeMangement.Controllers
             {
                 employee.Photo = "Images/emp.png";
                 _companyRepository.Add(employee);
-                return RedirectToAction("Details", new { id = employee.Id });
+                return RedirectToAction("Index");
             }
             return View();
         }
