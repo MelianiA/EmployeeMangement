@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeMangement.Extentions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeMangement.Models
 {
@@ -14,10 +15,7 @@ namespace EmployeeMangement.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasData(
-                    new Employee() { Id = 1, Name = "abdou", Departement = "Networking", Email = "abd@meliani.eu", Photo = "/Images/emp.png" }
-                );
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Seed();
         }
     }
 }

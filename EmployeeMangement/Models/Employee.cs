@@ -11,6 +11,6 @@ namespace EmployeeMangement.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Departement { get; set; }
-        public string Photo { get; set; }
+        public string PhotoPath { get; set; }
     }
 }

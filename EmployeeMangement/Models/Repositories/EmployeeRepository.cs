@@ -21,7 +21,7 @@ namespace EmployeeMangement.Models.Repositories
         public Employee Add(Employee employee)
         {
             employee.Id=Employees.Max(employee => employee.Id)+1;
-            employee.Photo = "/Images/emp.png";
+            employee.PhotoPath = "/Images/emp.png";
             Employees.Add(employee);
 
             return employee;
@@ -49,7 +49,7 @@ namespace EmployeeMangement.Models.Repositories
                 employ.Name = entityChanges.Name;
                 employ.Departement = entityChanges.Departement;
                 employ.Email = entityChanges.Email;
-                employ.Photo = entityChanges.Photo;
+                employ.PhotoPath = entityChanges.PhotoPath;
             }
             return employ;
         }
