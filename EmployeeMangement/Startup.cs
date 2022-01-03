@@ -3,6 +3,7 @@ using EmployeeMangement.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace EmployeeMangement
@@ -31,6 +33,11 @@ namespace EmployeeMangement
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddScoped<ICompanyRepository<Employee>, SQLEmployeeRepository>();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+            });
+
             services.AddDbContext<AppDbContext>(
                 optionsAction => optionsAction.UseSqlServer(
                     _configuration.GetConnectionString("EmployeeDbConnection")));
@@ -39,6 +46,7 @@ namespace EmployeeMangement
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -46,8 +54,10 @@ namespace EmployeeMangement
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
-
+           
+            app.UseStaticFiles();
             app.UseFileServer();
             app.UseMvc(routes =>
             {

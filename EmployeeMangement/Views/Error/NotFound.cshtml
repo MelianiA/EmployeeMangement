@@ -1,0 +1,21 @@
+﻿@model StatusResult
+@{
+    ViewBag.Title = "404 Error";
+}
+
+<div class="jumbotron my-5">
+    <h1 class="display-4 text-danger"> 404 Not found Eroor</h1>
+    <p class="lead">
+        @Model.Message
+    </p>
+    <hr class="my-4" />
+    <p>
+        Path: @Model.Path <br />
+        @if (!string.IsNullOrEmpty(Model.QS) )
+       {
+        <span>Query strings : @Model.QS</span>
+       }
+    </p>
+    <a asp-controller="Employee" asp-action="index" class="btn btn-outline-dark"> Click here to see the list off all employees</a>
+
+</div>

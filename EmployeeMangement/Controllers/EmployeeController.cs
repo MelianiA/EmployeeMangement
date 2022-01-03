@@ -22,19 +22,29 @@ namespace EmployeeMangement.Controllers
             _companyRepository = companyRepository;
             this._hostingEnvironment = hostingEnvironment;
         }
+        [HttpGet]
         public ViewResult Index()
         {
             return View(_companyRepository.GetEntities());
         }
-        public ViewResult Details(int id)
+
+        [HttpGet]
+        public ViewResult Details(Employee employee)
         {
-            return View(_companyRepository.Get(id));
+            var emp = _companyRepository.Get(employee.Id);
+            if (emp is null)
+            {
+                return View("NotFoundError", employee.Id);
+            }
+            return View(emp);
         }
 
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Create(EmployeeCreateViewModel model)
         {
@@ -63,7 +73,7 @@ namespace EmployeeMangement.Controllers
             }
             return View();
         }
-
+        [HttpGet]
         public ActionResult Delete(Employee employee)
         {
             if (ModelState.IsValid)
@@ -81,26 +91,33 @@ namespace EmployeeMangement.Controllers
             }
             return View();
         }
-
+        [HttpGet]
         public ActionResult Update(int id)
         {
-
-            Employee employee = _companyRepository.Get(id);
-            EmployeeEditViewModel model = new EmployeeEditViewModel()
+            if (ModelState.IsValid)
             {
-                Id = employee.Id,
-                Name = employee.Name,
-                Departement = employee.Departement,
-                Email = employee.Email,
-                PhotoPath = employee.PhotoPath
-            };
-            return View(model);
-        }
+                Employee employee = _companyRepository.Get(id);
+                if (employee is null)
+                    return View("NotFoundError", id);
+                EmployeeEditViewModel model = new EmployeeEditViewModel()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    Departement = employee.Departement,
+                    Email = employee.Email,
+                    PhotoPath = employee.PhotoPath
+                };
+                return View(model);
+            }
+            return View("index", _companyRepository.GetEntities());
 
+        }
         [HttpPost]
         public ActionResult Update(EmployeeEditViewModel model)
         {
             string uniqueFileName = null;
+            Employee employee = _companyRepository.Get(model.Id);
+            //if employe changes photo
             if (model.Photo != null)
             {
                 string extsion = Path.GetExtension(model.Photo.FileName);
@@ -109,24 +126,40 @@ namespace EmployeeMangement.Controllers
                     ModelState.AddModelError("", "Invalid file format");
                     return View(model);
                 }
-                uniqueFileName = CreateFilePhotoEmploye(model);  
-            }
-            //delete img from server 
-            Employee employee = _companyRepository.Get(model.Id);
-            if (employee.PhotoPath != null && employee.PhotoPath != "/Images/emp.png")
-            {
-                var oldPhotoEmploye = Path.Combine(_hostingEnvironment.WebRootPath, "Images", employee.PhotoPath);
-                System.IO.File.Delete(oldPhotoEmploye);
-            }
-            //update data
-            employee.Name = model.Name;
-            employee.Email = model.Email;
-            employee.Departement = model.Departement;
-            employee.PhotoPath = uniqueFileName;
+                uniqueFileName = CreateFilePhotoEmploye(model);
 
-            //update db
-            _companyRepository.Update(employee);
+                //delete img from server 
+                if (employee?.PhotoPath != null)
+                {
+                    var oldPhotoEmploye = Path.Combine(_hostingEnvironment.WebRootPath, "Images", employee.PhotoPath);
+                    System.IO.File.Delete(oldPhotoEmploye);
+                }
+            }
+            else
+                uniqueFileName = employee.PhotoPath;
+
+            //update data in model
+            if (employee != null)
+            {
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Departement = model.Departement;
+                employee.PhotoPath = uniqueFileName;
+
+                //update db
+                _companyRepository.Update(employee);
+            }
             return RedirectToAction("Index");
+
+        }
+        [HttpGet]
+        public ActionResult DeletePhoto(Employee emp)
+        {
+
+            Employee employee = _companyRepository.Get(emp.Id);
+            employee.PhotoPath = null;
+            _companyRepository.Update(employee);
+            return RedirectToAction("Update", new { id = emp.Id });
         }
 
         private string CreateFilePhotoEmploye(EmployeeCreateViewModel model)

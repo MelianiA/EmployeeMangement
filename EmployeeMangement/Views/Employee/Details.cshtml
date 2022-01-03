@@ -3,21 +3,17 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "_Layout";
+    var ExistingPhotoPathName = "/Images/" + (Model.PhotoPath == null?"emp.png":Model.PhotoPath);
 
 }
 
 <h1>Details</h1>
-
- 
-<table class="table" border="0">
-    <thead>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Departement</th>
-    </thead>
-    <tbody>
-        <td>@Model.Name</td>
-        <td>@Model.Email</td>
-        <td>@Model.Departement</td>
-    </tbody>
-</table>
+<div class="card border-dark mb-3" style="max-width: 18rem;">
+  <div class="card-header">@Model.Name</div>
+  <div class="card-body text-dark">
+    <h5 class="card-title">@Model.Departement</h5>
+    <p class="card-text">@Model.Email</p>
+   <img src="@ExistingPhotoPathName" class="img-thumbnail">
+    <a asp-action="Index" class="btn btn-secondary" >Back to list</a>
+  </div>
+</div>

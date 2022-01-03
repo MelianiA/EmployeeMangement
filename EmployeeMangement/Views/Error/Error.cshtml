@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Error";
+}
+
+<div class="jumbotron my-5">
+    <h1 class="display-4 text-danger">Constact the support team</h1>
+    <p class="lead">
+        <span>
+            <b>Message</b>:  @ViewBag.Message
+        </span> <br />
+        <span>
+            <b>Path</b>:  @ViewBag.Path
+        </span>
+    </p>
+    <hr class="my-4" />
+    <a asp-controller = "Employee" asp-action="index" class="btn btn-dark"> Click here to see the list off all employees</a>
+    <p>Please contact <span class="text-danger">contact@iasoft.fr</span></p>
+</div>
+
