@@ -14,15 +14,20 @@
 </head>
 <body>
     <div class="m-4">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <a asp-action="index"  class="navbar-brand">Home</a>
+            <a asp-controller = "Employee" asp-action="index"  class="navbar-brand">Home</a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
-                    <a asp-action="Create" class="nav-item nav-link active">Add</a>
+                    <a asp-controller = "Employee" asp-action="Create" class="nav-item nav-link active">Add</a>
+                </div>
+            </div>
+             <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a asp-controller = "Account"  asp-action="register" class="nav-item nav-link active">Register</a>
                 </div>
             </div>
         </div>

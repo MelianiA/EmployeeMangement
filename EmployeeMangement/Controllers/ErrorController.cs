@@ -1,11 +1,19 @@
 ﻿using EmployeeMangement.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeMangement.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly ILogger<ErrorController> _logger;
+
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            this._logger = logger;
+        }
+
         [Route("Error/{StatusCode}")]
         public IActionResult Index(int StatusCode)
         {
@@ -16,8 +24,8 @@ namespace EmployeeMangement.Controllers
                 case 404:
                     {
                         model.Message = "Sorry, the ressource you requested could not be found";
-                        model.Path = statusCodeResult.OriginalPath;
-                        model.QS = statusCodeResult.OriginalQueryString;
+                        _logger.LogWarning($"404 error occured.path = {statusCodeResult.OriginalPath}" +
+                            $"and QueryString = {statusCodeResult.OriginalQueryString}");
                     }
                     break;
                 default:
@@ -33,6 +41,8 @@ namespace EmployeeMangement.Controllers
             ViewBag.Message = execeptionStatus.Error.Message;
             ViewBag.StackTrace = execeptionStatus.Error.StackTrace;
             ViewBag.Path = execeptionStatus.Path;
+
+            _logger.LogError($"The path {execeptionStatus.Path} throw an exeception {execeptionStatus.Error}");
 
             return View();
 

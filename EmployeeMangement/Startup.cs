@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,8 @@ namespace EmployeeMangement
             services.AddDbContext<AppDbContext>(
                 optionsAction => optionsAction.UseSqlServer(
                     _configuration.GetConnectionString("EmployeeDbConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +60,7 @@ namespace EmployeeMangement
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
            
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseFileServer();
             app.UseMvc(routes =>
