@@ -1,10 +1,12 @@
 using EmployeeMangement.Models;
 using EmployeeMangement.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,29 +33,33 @@ namespace EmployeeMangement
         {
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddScoped<ICompanyRepository<Employee>, SQLEmployeeRepository>();
+            services.AddMvc(
+                options =>
+                        {
+                            options.EnableEndpointRouting = false;
+                            var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
+                                                                                         .Build();
+                            options.Filters.Add(new AuthorizeFilter(policy));
+                        }).AddXmlSerializerFormatters();
 
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
-            });
+            services.AddScoped<ICompanyRepository<Employee>, SQLEmployeeRepository>();
+            services.ConfigureApplicationCookie(op => op.LoginPath = "/Account/Login");
 
             services.AddDbContext<AppDbContext>(
                 optionsAction => optionsAction.UseSqlServer(
                     _configuration.GetConnectionString("EmployeeDbConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>( options =>
-            {
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-            }).AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+           {
+               options.Password.RequireUppercase = false;
+               options.Password.RequireLowercase = false;
+           }).AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -63,7 +69,7 @@ namespace EmployeeMangement
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
-           
+
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseFileServer();

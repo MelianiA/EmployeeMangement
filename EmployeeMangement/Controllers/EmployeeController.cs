@@ -1,6 +1,7 @@
 ﻿using EmployeeMangement.Models;
 using EmployeeMangement.Models.Repositories;
 using EmployeeMangement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,12 +24,14 @@ namespace EmployeeMangement.Controllers
             this._hostingEnvironment = hostingEnvironment;
         }
         [HttpGet]
+        [AllowAnonymous]
         public ViewResult Index()
         {
             return View(_companyRepository.GetEntities());
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ViewResult Details(Employee employee)
         {
             var emp = _companyRepository.Get(employee.Id);
@@ -40,12 +43,14 @@ namespace EmployeeMangement.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Create(EmployeeCreateViewModel model)
         {
             string uniqueFileName = null;
@@ -74,6 +79,7 @@ namespace EmployeeMangement.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize]
         public ActionResult Delete(Employee employee)
         {
             if (ModelState.IsValid)
@@ -92,6 +98,7 @@ namespace EmployeeMangement.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize]
         public ActionResult Update(int id)
         {
             if (ModelState.IsValid)
@@ -113,6 +120,7 @@ namespace EmployeeMangement.Controllers
 
         }
         [HttpPost]
+        [Authorize]
         public ActionResult Update(EmployeeEditViewModel model)
         {
             string uniqueFileName = null;
@@ -153,6 +161,7 @@ namespace EmployeeMangement.Controllers
 
         }
         [HttpGet]
+        [Authorize]
         public ActionResult DeletePhoto(Employee emp)
         {
 
