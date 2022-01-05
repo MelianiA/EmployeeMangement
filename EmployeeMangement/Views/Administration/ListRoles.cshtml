@@ -1,0 +1,33 @@
+﻿@model IEnumerable<IdentityRole>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+@*<h1 class="text-center">List roles</h1>*@
+<p class="alert alert-warning text-dark my-5 text-center">
+    List roles
+</p>
+<hr />
+    <a asp-action="CreateRole" class="btn btn-primary">Create new role</a>
+<hr />
+
+<div class="row" >
+    @foreach (IdentityRole item in @Model)
+    {
+        <div class="col-12 my-1">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text"><small><b>Id:</b> @item.Id</small></p>
+                </div>
+                <div class="group-input  d-flex justify-content-center" style="padding:5px;">
+                    <form>
+                        <button asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</button>
+                        <button asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

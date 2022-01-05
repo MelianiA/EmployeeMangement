@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<EmployeeMangement.Models.Employee>
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = "_Layout";
     ViewData["Title"] = "Index";
 }
 <style>
@@ -16,7 +14,7 @@
         margin-left: 5px;
     }
 </style>
-
+<h1 class="text-center">List employees</h1>
 <div class="row row-cols-1 row-cols-md-3" >
     @foreach (var item in @Model)
     {

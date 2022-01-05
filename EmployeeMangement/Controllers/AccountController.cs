@@ -47,8 +47,8 @@ namespace EmployeeMangement.Controllers
                 AppUser user = new AppUser
                 {
                     FirstName = model.FirstName,
-                    LastName =  model.LastName,
-                    Age =   model.Age,
+                    LastName = model.LastName,
+                    Age = model.Age,
                     UserName = model.Email,
                     Email = model.Email
                 };
@@ -101,11 +101,65 @@ namespace EmployeeMangement.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Employee");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditAccount(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                AppUser user = await _userManager.FindByIdAsync(id);
+                if (user!=null)
+                {
+                    EditAccountViewModel model = new EditAccountViewModel
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,   
+                        Age = user.Age,
+                        Id = id,
+                        Password = user.PasswordHash,
+                        ConfirmPassword = user.PasswordHash
+                         
+                    };
+                    return View(model);
+                }
+            }
+            return RedirectToAction("Index", "Employee");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAccount(EditAccountViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AppUser user = await _userManager.FindByIdAsync(model.Id);
+                if (user!=null)
+                {
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.Age = model.Age;
+
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
+
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Employee");
+                    }
+                    foreach (var err in result.Errors)
+                    {
+                        ModelState.AddModelError("",err.Description);
+                    }
+                }
+            }
+            return View(model);
+
+        }
+
     }
 }

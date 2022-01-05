@@ -4,11 +4,12 @@
     ViewData["Title"] = "Update";
     Layout = "_Layout";
 }
+<h1 class="text-center">Update employee</h1>
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Update" enctype="multipart/form-data" >
-            <input hidden asp-for="Id"/>
-            <input hidden asp-for="PhotoPath"/>
+        <form asp-action="Update" enctype="multipart/form-data">
+            <input hidden asp-for="Id" />
+            <input hidden asp-for="PhotoPath" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Name</label>
                 <input asp-for="Name" class="form-control" />
@@ -24,27 +25,17 @@
                 <input asp-for="Departement" class="form-control" />
                 <span asp-validation-for="Departement" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        @*<a asp-action = "deletePhoto" asp-route-id="@Model.Id" class="btn btn-outline-secondary" >X</a>*@
-                    </div>
-                    <div class="custom-file">
-                        <input asp-for="Photo" accept="image/*" class="custom-file-input" id="inputGroupFile01" />
-                        <label class="custom-file-label" for="inputGroupFile01" >@Model.PhotoPath</label>
-                    </div>
-                </div>
-
-            </div>
+            <br />
+            <input asp-for="Photo" class="form-control" type="file" id="inputGroupFile01" multiple>
+            <br />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
                 <input type="submit" value="Update" class="btn btn-primary" />
-                <a href="/"  class="btn btn-dark">Cancel</a>
+                <a href="/" class="btn btn-dark">Cancel</a>
             </div>
 
-           
+
         </form>
 
     </div>
@@ -52,10 +43,10 @@
 
 @section CreateSectionJs {
 <script>
-         $("#inputGroupFile01").on("change", function()
-            {
-               var input = $(this).val().split("\\").pop();
-               $(".custom-file-label").html(input);
-            });
+    $("#inputGroupFile01").on("change", function()
+       {
+          var input = $(this).val().split("\\").pop();
+          $(".custom-file-label").html(input);
+       });
 </script>
  }
