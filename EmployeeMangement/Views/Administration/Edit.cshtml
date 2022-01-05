@@ -23,47 +23,45 @@
                 <input type="submit" value="Edit role" class="btn btn-secondary mx-1" />
                 <a asp-action="ListRoles" class="btn btn-primary mx-3">Cancel</a>
             </div>
-            <br/>
+            <br />
             @if (@Model.Users.Count == 0)
             {
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-center">List users</h5>
+                        <h5 class="card-title text-center">Users in this role</h5>
                         <p class="card-text text-center">Any users !</p>
                     </div>
                     <div class="group-input  d-flex justify-content-center" style="padding:5px;">
                         <form>
-                            <div>
-                        <button asp-action="Details" class="btn-sm btn-primary mr-1 ">Add users</button> 
-                        </div>
-                        <button asp-action="Update" class="btn-sm my-auto btn-secondary">Back to list</button>
+                            <a asp-action="EditUserRole" asp-route-idRole="@Model.Id" class="btn  btn-primary  mx-2">Add/Remove users</a>
+                            <a asp-action="ListRoles" class="btn  my-auto btn-secondary">Back to list</a>
                         </form>
                     </div>
                 </div>
             }
             else
             {
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">List users</h5>
-                    <p class="card-text text-center"> 
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Users in this role</h5>
                         @foreach (var userEmail in Model.Users)
                         {
-                            <span class="text-danger">@userEmail</span> <br/>
+                            <p class="card-text text-center">
+
+                                <span class="text-danger ">@userEmail</span> <hr />
+                            </p>
+
                         }
-                    </p>
+                    </div>
+                    <div class="group-input  d-flex justify-content-center" style="padding:5px;">
+                        <form>
+                            <a asp-action="EditUserRole" asp-route-idRole="@Model.Id" class="btn  btn-primary  mx-2">Add/Remove users</a>
+                            <a asp-action="ListRoles" class="btn  my-auto btn-secondary">Back to list</a>
+                        </form>
+                    </div>
                 </div>
-                <div class="group-input  d-flex justify-content-center" style="padding:5px;">
-                    <form>
-                        <div>
-                        <button asp-action="Details" class="btn-sm btn-primary mr-1 ">Add users</button> 
-                        </div>
-                        <button asp-action="Update" class="btn-sm my-auto btn-secondary">Back to list</button>
-                    </form>
-                </div>
-            </div>
             }
-          
+
 
             <div asp-validation-summary="All" class="text-danger"></div>
         </form>
