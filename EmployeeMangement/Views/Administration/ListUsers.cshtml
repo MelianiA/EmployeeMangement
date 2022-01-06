@@ -1,0 +1,68 @@
+﻿@model IEnumerable<AppUser>
+@{
+    ViewData["Title"] = "Users manager";
+    int counter = 0;
+}
+
+<p class="alert alert-warning text-dark my-5 text-center">
+    List users
+</p>
+<div class="my-5">
+    <table class="table" id="mytable">
+        <thead class="table-dark table-hover thead-dark">
+            <tr>
+                <td scope="col">
+                    #
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.FirstName)
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.LastName)
+
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Age)
+
+                </td>
+                <td scope="col">
+                    @Html.DisplayNameFor(item => item.Email)
+
+                </td>
+                <td scope="col">
+                    <span>Operations</span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr scope="row">
+                    <td scope="col"> @counter </td>
+                    <td scope="col"> @user.FirstName </td>
+                    <td scope="col"> @user.LastName </td>
+                    <td scope="col"> @user.Age </td>
+                    <td scope="col"> @user.Email </td>
+                    <td scope="col">
+                        <a asp-action="EditUser" asp-controller="Account" asp-route-id="@user.Id"
+                       style="width:120px;" class="btn btn-dark mx-2 btn-sm">Edit</a>
+
+                        <a asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id"
+                       style="width:120px;" class="btn btn-danger mx-2 btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="my-3">
+        <a asp-action="Register" asp-controller="Account" class="btn btn-sm btn-primary">Add new user</a>
+    </div>
+</div>
+
+@section DTListUsers {
+<script>
+    $(document).ready( function() {
+        $("#mytable").DataTable();
+    });
+</script>
+}

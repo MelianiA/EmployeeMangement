@@ -14,6 +14,10 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,6 +31,23 @@
                     <li class="nav-item">
                         <a asp-controller="Employee" asp-action="Create" class="nav-item nav-link active">Add</a>
                     </li>
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <form class="d-flex">
+
+                                <div class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Manage roles
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-action="ListRoles" asp-controller="Administration">Roles</a></li>
+                                        <li><a class="dropdown-item" asp-action="ListUsers" asp-controller="Administration">Users</a></li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                    }
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     @if (signInManager.IsSignedIn(User))
@@ -45,17 +66,14 @@
                                         @FullName
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-route-id = "@user.Id" asp-action="EditAccount" asp-controller="Account" >Edit account</a></li>
+                                        <li><a class="dropdown-item" asp-route-id="@user.Id" asp-action="EditAccount" asp-controller="Account">Edit account</a></li>
                                         <li><a class="dropdown-item" href="#">Help</a></li>
-                                        <li><hr/></li>
+                                        <li><hr /></li>
                                         <li>
-                                            <a class="btn btn-outline-dark" asp-action="Logout" asp-controller="Account" >Logout</a>
-                                            
+                                            <a class="btn btn-outline-dark" asp-action="Logout" asp-controller="Account">Logout</a>
                                         </li>
                                     </ul>
-
                                 </div>
-
                             </form>
                         </li>
                     }
@@ -80,5 +98,6 @@
     </div>
 
     @RenderSection("CreateSectionJs",false);
+    @RenderSection("DTListUsers",false);
 </body>
 </html>
