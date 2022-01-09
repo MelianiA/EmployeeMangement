@@ -1,0 +1,136 @@
+﻿@model AccountEditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit user";
+}
+
+<h1 class="text-center">Edit user</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="EditUser" method="post">
+            <input hidden asp-for="Id" class="form-control" />
+
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label">First name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label">Last name</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Age" class="control-label">Age</label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Validate" class="btn btn-primary" />
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <br />
+
+            @if (Model.Roles.Count == 0)
+            {
+                <div class="row">
+                    <div class="col-md-6 col-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="display-3">User roles</span>
+                            </div>
+                            <div class="card-body">
+                                <span>None at the moment !</span>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="ListRoles" asp-controller="Administration" class="btn btn-dark mx-2">Manage roles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-6 col-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="display-3">User roles</span>
+                            </div>
+                            <div class="card-body">
+                                <ol class="active">
+                                    @for (var i = 0; i < Model.Roles.Count; i++)
+                                    {
+                                        <li>
+                                            <label class="mx-1  ">@Model.Roles[i]</label>
+                                        </li>
+                                    }
+                                </ol>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="ListRoles" asp-controller="Administration" class="btn btn-dark mx-2">Manage roles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
+
+            @if (Model.Claims.Count == 0)
+            {
+                  <div class="row">
+                    <div class="col-md-6 col-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="display-3">User claims</span>
+                            </div>
+                            <div class="card-body">
+                                <span>None at the moment !</span>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="ListClaims" asp-controller="Administration" class="btn btn-dark mx-2">Manage claims</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-6 col-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="display-3">User claims</span>
+                            </div>
+                            <div class="card-body">
+                                <ol class="active">
+                                    @for (var i = 0; i < Model.Roles.Count; i++)
+                                    {
+                                        <li>
+                                            <label class="mx-1  ">@Model.Roles[i]</label>
+                                        </li>
+                                    }
+                                </ol>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="ListRoles" asp-controller="Administration" class="btn btn-dark mx-2">Manage claims</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </form>
+    </div>
+</div>

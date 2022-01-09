@@ -1,10 +1,14 @@
 ﻿@model EmployeeMangement.Models.Employee
+@inject IWebHostEnvironment host
 
 @{
     ViewData["Title"] = "Details";
     Layout = "_Layout";
-    var ExistingPhotoPathName = "/Images/" + (Model.PhotoPath == null?"emp.png":Model.PhotoPath);
+    var ExistingPhotoPathName = "/ab/MyImages/" + (Model.PhotoPath == null?"emp.png":Model.PhotoPath);
 
+    //var ExistingPhotoPathName = System.IO.Path.Combine(  
+    //                                        "MyImages",
+    //                                        (Model.PhotoPath == null ? "emp.png" : Model.PhotoPath)); 
 }
 
 <div class="card border-dark mb-3" style="max-width: 18rem;">

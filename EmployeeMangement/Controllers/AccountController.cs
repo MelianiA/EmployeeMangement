@@ -3,6 +3,7 @@ using EmployeeMangement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmployeeMangement.Controllers
@@ -120,17 +121,17 @@ namespace EmployeeMangement.Controllers
             if (!string.IsNullOrEmpty(id))
             {
                 AppUser user = await _userManager.FindByIdAsync(id);
-                if (user!=null)
+                if (user != null)
                 {
                     EditAccountViewModel model = new EditAccountViewModel
                     {
                         FirstName = user.FirstName,
-                        LastName = user.LastName,   
+                        LastName = user.LastName,
                         Age = user.Age,
                         Id = id,
                         Password = user.PasswordHash,
                         ConfirmPassword = user.PasswordHash
-                         
+
                     };
                     return View(model);
                 }
@@ -144,7 +145,7 @@ namespace EmployeeMangement.Controllers
             if (ModelState.IsValid)
             {
                 AppUser user = await _userManager.FindByIdAsync(model.Id);
-                if (user!=null)
+                if (user != null)
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
@@ -159,7 +160,7 @@ namespace EmployeeMangement.Controllers
                     }
                     foreach (var err in result.Errors)
                     {
-                        ModelState.AddModelError("",err.Description);
+                        ModelState.AddModelError("", err.Description);
                     }
                 }
             }
@@ -167,5 +168,44 @@ namespace EmployeeMangement.Controllers
 
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> EditUser(string id)
+        {
+            AppUser user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return View("NoteDound", $"user with id {id} cannot be found");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            AccountEditUserViewModel model = new AccountEditUserViewModel
+            {
+                Age = user.Age,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Id = user.Id,
+                Roles = userRoles,
+                Claims = userClaims.Select(x => x.Value).ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditUser(AccountEditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ppUser user = await _userManager.FindByIdAsync(model.id);
+            }
+            else
+            {
+
+            }
+            return View(model);
+        }
     }
 }
