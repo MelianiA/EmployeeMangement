@@ -1,6 +1,7 @@
 ﻿using EmployeeMangement.Extentions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace EmployeeMangement.Models
 {
@@ -18,6 +19,11 @@ namespace EmployeeMangement.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Seed();
+
+            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e=>e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }

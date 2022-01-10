@@ -21,6 +21,7 @@ namespace EmployeeMangement.Controllers
             this._roleManager = roleManager;
             this._userManager = userManager;
         }
+
         public IActionResult CreateRole()
         {
             return View();
@@ -50,7 +51,7 @@ namespace EmployeeMangement.Controllers
         public ActionResult ListRoles() => View(_roleManager.Roles);
 
         [HttpGet]
-        public async Task<ActionResult> Edit(string id)
+        public async Task<ActionResult> EditRole(string id)
         {
             if (id is null)
             {
@@ -66,7 +67,6 @@ namespace EmployeeMangement.Controllers
                 Id = role.Id,
                 RoleName = role.Name,
                 Users = new List<string>()
-
             };
 
             foreach (var user in _userManager.Users.ToList())
@@ -76,11 +76,11 @@ namespace EmployeeMangement.Controllers
                     model.Users.Add(user.Email);
                 }
             }
-            return View(model);
+            return View("EditRole", model);
 
         }
         [HttpPost]
-        public async Task<ActionResult> Edit(EditRoleViewModel model)
+        public async Task<ActionResult> EditRole(EditRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -169,11 +169,22 @@ namespace EmployeeMangement.Controllers
                     ModelState.AddModelError(string.Empty, item.Description);
                 }
             }
-            return RedirectToAction(nameof(Edit), new { id = idRole });
+            return RedirectToAction(nameof(EditRole), new { id = idRole });
 
         }
 
         [HttpGet]
         public ActionResult ListUsers() => View(_userManager.Users.Where(u=> u.Email != User.Identity.Name));
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            if (!(role is null))
+            {
+                var result = await _roleManager.DeleteAsync(role);
+            }
+            return RedirectToAction(nameof(ListRoles));
+        }
     }
 }

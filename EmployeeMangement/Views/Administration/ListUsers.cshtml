@@ -44,11 +44,11 @@
                     <td scope="col"> @user.Age </td>
                     <td scope="col"> @user.Email </td>
                     <td scope="col">
-                        <a asp-action="EditUser" asp-controller="Account" asp-route-id="@user.Id"
-                       style="width:120px;" class="btn btn-dark mx-2 btn-sm">Edit</a>
-
-                        <a asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id"
-                       style="width:120px;" class="btn btn-danger mx-2 btn-sm">Delete</a>
+                        <form asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id" method="post">
+                            <a asp-action="EditUser" asp-controller="Account" asp-route-id="@user.Id" style="width:120px;" class="btn btn-dark mx-2 btn-sm">Edit</a>
+                            <button style="width:120px;" class="btn btn-danger mx-2 btn-sm" type="submit"  
+                             onclick="return confirm('Are you sure to delete this user : @user.Email ?')"   >Delete</button>
+                        </form>
                     </td>
                 </tr>
             }
@@ -56,6 +56,7 @@
     </table>
     <div class="my-3">
         <a asp-action="Register" asp-controller="Account" class="btn btn-sm btn-primary">Add new user</a>
+       <div class="my-3" asp-validation-summary="All"></div>
     </div>
 </div>
 

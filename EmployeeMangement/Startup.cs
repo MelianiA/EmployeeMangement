@@ -36,7 +36,6 @@ namespace EmployeeMangement
         {
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
-
             services.AddMvc(
                 options =>
                         {
@@ -45,6 +44,8 @@ namespace EmployeeMangement
                                                                                          .Build();
                             options.Filters.Add(new AuthorizeFilter(policy));
                         }).AddXmlSerializerFormatters();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddDirectoryBrowser();
 
             services.AddScoped<ICompanyRepository<Employee>, SQLEmployeeRepository>();
             services.ConfigureApplicationCookie(op => op.LoginPath = "/Account/Login");
@@ -97,14 +98,12 @@ namespace EmployeeMangement
             }
 
             app.UseAuthentication();
-            app.UseFileServer();
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default",
                     "{controller=Employee}/{action=Index}/{id?}");
             });
             app.UseRouting();
-
 
             app.UseEndpoints(endpoints =>
             {

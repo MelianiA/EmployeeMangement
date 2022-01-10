@@ -199,13 +199,72 @@ namespace EmployeeMangement.Controllers
         {
             if (ModelState.IsValid)
             {
-                ppUser user = await _userManager.FindByIdAsync(model.id);
+                AppUser user = await _userManager.FindByIdAsync(model.Id);
+                if (user == null)
+                {
+                    return View("NoteDound", $"user with id {model.Id} cannot be found");
+                }
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Age = model.Age;
+                user.Email = model.Email;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListUsers", "Administration");
+                }
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, item.Description);
+                }
+                await SetClaimsAndRoles(model);
+
             }
             else
             {
-
+                await SetClaimsAndRoles(model);
             }
             return View(model);
+        }
+
+        public async Task<ActionResult> SetClaimsAndRoles(AccountEditUserViewModel model)
+        {
+            AppUser user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+            {
+                return View("NoteDound", $"user with id {model.Id} cannot be found");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            model.Roles = userRoles;
+            model.Claims = userClaims.Select(x => x.Value).ToList();
+
+            return RedirectToAction("EditUser", model);
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            AppUser user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return View("NoteDound", $"user with id {id} cannot be found");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, item.Description);
+                }
+            }
+
+            return RedirectToAction("ListUsers", "Administration");
+
         }
     }
 }
